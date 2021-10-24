@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ContactFormRequest;
 use App\Models\Contact;
 use App\Notifications\NewContact;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 
 class ContactController extends Controller
@@ -17,6 +17,7 @@ class ContactController extends Controller
      */
     public function index()
     {
+        toastr()->success('Miracle Max Says');
         return view("site.contact.index");
     }
 
@@ -26,13 +27,15 @@ class ContactController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ContactFormRequest $request)
     {
         $contact = Contact::create($request->all());
 
         Notification::route("mail", config("mail.from.address"))
             ->notify(new NewContact($contact));
 
-        ddd($contact);
+        toastr()->success('Contato criado com sucesso!');
+
+        return back();
     }
 }
